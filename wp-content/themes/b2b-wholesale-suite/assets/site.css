@@ -296,7 +296,7 @@ h3 { font-size: 21px; font-weight: 650; letter-spacing: -0.01em; }
   background: #ffffff;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  padding: 40px 26px 26px;
+  padding: 92px 26px 26px;
   box-shadow: 0 1px 2px rgba(20,18,30,.04), 0 30px 60px -30px rgba(20,18,30,.2);
 }
 .fi-dots { position: absolute; top: 18px; left: 20px; display: flex; gap: 6px; }
@@ -320,7 +320,7 @@ h3 { font-size: 21px; font-weight: 650; letter-spacing: -0.01em; }
 }
 .fi-stat-spark { width: 100%; height: 22px; display: block; color: var(--red); }
 
-.fi-product { display: flex; align-items: center; gap: 14px; margin: 18px 0 20px; }
+.fi-product { display: flex; align-items: center; gap: 14px; margin: 0 0 20px; }
 .fi-product-thumb { width: 48px; height: 48px; border-radius: 10px; background: var(--bg-elev); flex: none; }
 .fi-product-info { flex: 1; min-width: 0; }
 .fi-product-name { font-size: 14.5px; font-weight: 650; color: var(--ink); }
