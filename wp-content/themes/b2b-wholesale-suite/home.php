@@ -50,14 +50,14 @@ wp_reset_postdata();
             <button type="button" class="blog-tab" data-filter="<?php echo esc_attr( $b2bws_cat->slug ); ?>" role="tab" aria-selected="false"><?php echo esc_html( $b2bws_cat->name ); ?></button>
           <?php endforeach; ?>
         </div>
-        <label class="blog-sort">
-          <span>Sort by</span>
+        <div class="blog-sort">
           <select id="blog-sort-select">
+            <option value="" selected disabled hidden>Sort by</option>
             <option value="newest">Newest</option>
             <option value="oldest">Oldest</option>
             <option value="title-asc">Title A&ndash;Z</option>
           </select>
-        </label>
+        </div>
       </div>
     </div>
 
