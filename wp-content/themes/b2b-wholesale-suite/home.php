@@ -8,26 +8,70 @@
   </div>
 </header>
 
-<section>
+<?php
+$b2bws_featured = new WP_Query( array(
+	'category_name'       => 'featured',
+	'posts_per_page'      => 3,
+	'ignore_sticky_posts'  => true,
+) );
+if ( $b2bws_featured->have_posts() ) :
+?>
+<section class="tight">
   <div class="wrap">
-    <div class="grid-cards" data-reveal-group>
+    <div class="section-head left" data-reveal>
+      <span class="eyebrow"><span class="dot"></span>Featured</span>
+    </div>
+    <div class="blog-grid" data-reveal-group>
+      <?php while ( $b2bws_featured->have_posts() ) : $b2bws_featured->the_post(); ?>
+        <?php get_template_part( 'template-parts/post-card' ); ?>
+      <?php endwhile; ?>
+    </div>
+  </div>
+</section>
+<?php
+endif;
+wp_reset_postdata();
+?>
+
+<section class="section-alt">
+  <div class="wrap">
+    <div class="blog-toolbar" data-reveal>
+      <h2 class="section-title">All News</h2>
+      <div class="blog-controls">
+        <div class="blog-tabs" role="tablist">
+          <button type="button" class="blog-tab active" data-filter="all" role="tab" aria-selected="true">All</button>
+          <?php
+          $b2bws_cats = get_categories( array( 'hide_empty' => true ) );
+          foreach ( $b2bws_cats as $b2bws_cat ) :
+            if ( 'featured' === $b2bws_cat->slug ) {
+              continue;
+            }
+            ?>
+            <button type="button" class="blog-tab" data-filter="<?php echo esc_attr( $b2bws_cat->slug ); ?>" role="tab" aria-selected="false"><?php echo esc_html( $b2bws_cat->name ); ?></button>
+          <?php endforeach; ?>
+        </div>
+        <label class="blog-sort">
+          <span>Sort by</span>
+          <select id="blog-sort-select">
+            <option value="newest">Newest</option>
+            <option value="oldest">Oldest</option>
+            <option value="title-asc">Title A&ndash;Z</option>
+          </select>
+        </label>
+      </div>
+    </div>
+
+    <div class="blog-grid" id="blog-grid" data-reveal-group>
       <?php if ( have_posts() ) : ?>
         <?php while ( have_posts() ) : the_post(); ?>
-          <a class="card post-card" href="<?php the_permalink(); ?>">
-            <span class="post-date"><?php echo esc_html( get_the_date() ); ?></span>
-            <h3><?php the_title(); ?></h3>
-            <p><?php echo esc_html( wp_trim_words( get_the_excerpt(), 22 ) ); ?></p>
-            <span class="read-more">Read article &rarr;</span>
-          </a>
+          <?php get_template_part( 'template-parts/post-card' ); ?>
         <?php endwhile; ?>
       <?php else : ?>
         <p>No posts yet. Check back soon.</p>
       <?php endif; ?>
     </div>
 
-    <div class="center mt-32">
-      <?php the_posts_pagination( array( 'prev_text' => '&larr; Newer', 'next_text' => 'Older &rarr;' ) ); ?>
-    </div>
+    <p class="blog-empty" id="blog-empty" hidden>No posts in this category yet.</p>
   </div>
 </section>
 
