@@ -186,7 +186,7 @@ h3 { font-size: 21px; font-weight: 650; letter-spacing: -0.01em; }
 /* ---------- Hero + WebGL canvas ---------- */
 .hero {
   position: relative;
-  padding: 200px 0 120px;
+  padding: 120px 0px;
   overflow: hidden;
   isolation: isolate;
 }
