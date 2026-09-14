@@ -786,6 +786,36 @@ section.tight { padding: 72px 0; }
 .legal-content a { color: var(--accent-ink); text-decoration: underline; }
 .legal-content strong { color: var(--ink); }
 .legal-content hr { border: none; border-top: 1px solid var(--line); margin: 40px 0; }
+.legal-content table { width: 100%; border-collapse: collapse; margin: 0 0 24px; font-size: 14.5px; }
+.legal-content th, .legal-content td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.legal-content th { color: var(--ink-faint); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; font-weight: 700; }
+.legal-table-wrap { overflow-x: auto; margin-bottom: 24px; }
+.legal-content code {
+  background: var(--bg-elev); border: 1px solid var(--line); border-radius: 6px;
+  padding: 2px 6px; font-size: 13.5px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--accent-ink);
+}
+.legal-meta-row {
+  display: flex; gap: 24px; flex-wrap: wrap; font-size: 14px; color: var(--ink-faint);
+  margin: 0 0 32px; padding-bottom: 24px; border-bottom: 1px solid var(--line);
+}
+.legal-meta-row strong { color: var(--ink); }
+.legal-callout {
+  background: rgba(139,92,246,.08); border: 1px solid rgba(139,92,246,.3);
+  border-radius: var(--radius); padding: 24px 28px; margin: 0 0 44px;
+}
+.legal-callout h2 { margin: 0 0 12px; font-size: 16px; color: var(--ink); }
+.legal-callout ul { margin: 0; padding-left: 20px; }
+.legal-callout li { margin-bottom: 8px; font-size: 15px; color: var(--ink-soft); }
+.legal-callout li:last-child { margin-bottom: 0; }
+.legal-contact-box {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 24px 28px; margin: 8px 0 32px;
+}
+.legal-contact-box h3 { margin: 0 0 12px; font-size: 17px; }
+.legal-contact-box p { margin: 0 0 6px; font-size: 15px; }
+.legal-contact-box p:last-child { margin-bottom: 0; }
+.legal-footer-line { text-align: center; color: var(--ink-faint); font-size: 13px; }
 
 /* ---------- Social proof strip / marquee ---------- */
 .proof-strip { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 40px 0; background: var(--bg-elev); overflow: hidden; }
