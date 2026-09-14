@@ -7,6 +7,7 @@
 <?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
+<div class="cursor-glow" aria-hidden="true"></div>
 <?php wp_body_open(); ?>
 
 <nav class="nav">

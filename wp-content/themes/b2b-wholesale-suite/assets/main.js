@@ -17,6 +17,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  /* ---------- Global cursor glow (whole page) ---------- */
+  const cursorGlow = document.querySelector('.cursor-glow');
+  if (cursorGlow && !reduceMotion && window.matchMedia('(hover: hover)').matches) {
+    window.addEventListener('mousemove', (e) => {
+      cursorGlow.style.setProperty('--cx', `${e.clientX}px`);
+      cursorGlow.style.setProperty('--cy', `${e.clientY}px`);
+      cursorGlow.classList.add('is-active');
+    }, { passive: true });
+    document.addEventListener('mouseleave', () => cursorGlow.classList.remove('is-active'));
+  }
+
   /* ---------- Smooth scroll (Lenis) ---------- */
   let lenis = null;
   if (!reduceMotion && typeof Lenis !== 'undefined') {
