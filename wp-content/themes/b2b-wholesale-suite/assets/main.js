@@ -172,4 +172,56 @@ document.addEventListener('DOMContentLoaded', () => {
   if (hasGSAP && typeof ScrollTrigger !== 'undefined') {
     ScrollTrigger.refresh();
   }
+
+  /* ---------- Contact form ---------- */
+  const contactForm = document.getElementById('contact-form');
+  if (contactForm) {
+    const statusEl = document.getElementById('contact-form-status');
+    const submitBtn = contactForm.querySelector('.contact-form-submit');
+    const setStatus = (text, cls) => {
+      if (!statusEl) return;
+      statusEl.textContent = text;
+      statusEl.className = 'contact-form-status' + (cls ? ' ' + cls : '');
+    };
+
+    contactForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = contactForm.querySelector('#cf-name').value.trim();
+      const email = contactForm.querySelector('#cf-email').value.trim();
+      const message = contactForm.querySelector('#cf-message').value.trim();
+      if (!name || !email || !message) return;
+
+      if (window.b2bwsAjax && window.b2bwsAjax.ajaxUrl) {
+        submitBtn.disabled = true;
+        setStatus('Sending…', '');
+        const data = new FormData();
+        data.append('action', 'b2bws_contact_submit');
+        data.append('nonce', window.b2bwsAjax.nonce);
+        data.append('name', name);
+        data.append('email', email);
+        data.append('message', message);
+
+        fetch(window.b2bwsAjax.ajaxUrl, { method: 'POST', body: data })
+          .then((res) => res.json())
+          .then((json) => {
+            submitBtn.disabled = false;
+            if (json && json.success) {
+              setStatus("Thanks — we'll get back to you within one business day.", 'is-success');
+              contactForm.reset();
+            } else {
+              setStatus((json && json.data && json.data.message) || 'Something went wrong. Please email us directly.', 'is-error');
+            }
+          })
+          .catch(() => {
+            submitBtn.disabled = false;
+            setStatus('Something went wrong. Please email us directly.', 'is-error');
+          });
+      } else {
+        const subject = encodeURIComponent('New message from ' + name);
+        const body = encodeURIComponent(message + '\n\n— ' + name + ' (' + email + ')');
+        setStatus('Opening your email client…', '');
+        window.location.href = 'mailto:contact@b2bwholesalesuite.com?subject=' + subject + '&body=' + body;
+      }
+    });
+  }
 });

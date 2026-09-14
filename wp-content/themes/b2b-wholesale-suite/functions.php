@@ -46,6 +46,10 @@ function b2bws_assets() {
 	// Theme scripts
 	wp_enqueue_script( 'b2bws-hero-bg', $theme_uri . '/assets/hero-bg.js', array( 'threejs' ), b2bws_asset_ver( '/assets/hero-bg.js' ), true );
 	wp_enqueue_script( 'b2bws-main', $theme_uri . '/assets/main.js', array( 'gsap', 'gsap-scrolltrigger', 'lenis', 'b2bws-hero-bg' ), b2bws_asset_ver( '/assets/main.js' ), true );
+	wp_localize_script( 'b2bws-main', 'b2bwsAjax', array(
+		'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+		'nonce'   => wp_create_nonce( 'b2bws_contact_submit' ),
+	) );
 
 	// Blog filter/sort — only needed on the blog listing page.
 	if ( is_home() ) {
@@ -53,6 +57,46 @@ function b2bws_assets() {
 	}
 }
 add_action( 'wp_enqueue_scripts', 'b2bws_assets' );
+
+/**
+ * Contact form submission — sends the message to the team inbox via wp_mail().
+ */
+function b2bws_contact_submit() {
+	check_ajax_referer( 'b2bws_contact_submit', 'nonce' );
+
+	$name    = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
+	$email   = isset( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '';
+	$message = isset( $_POST['message'] ) ? sanitize_textarea_field( wp_unslash( $_POST['message'] ) ) : '';
+
+	if ( ! $name || ! $email || ! is_email( $email ) || ! $message ) {
+		wp_send_json_error( array( 'message' => 'Please fill in every field with a valid email.' ), 400 );
+	}
+
+	$to      = 'contact@b2bwholesalesuite.com';
+	$subject = 'New contact form message from ' . $name;
+	$body    = "Name: {$name}\nEmail: {$email}\n\nMessage:\n{$message}";
+	$headers = array( 'Reply-To: ' . $name . ' <' . $email . '>' );
+
+	// WordPress's default From address (wordpress@<site-host>) can be invalid
+	// on local/dev hosts with no real TLD; pin it to our own domain so wp_mail()
+	// doesn't fail purely on an unrelated address-format issue.
+	$set_from = function () {
+		return 'contact@b2bwholesalesuite.com';
+	};
+	add_filter( 'wp_mail_from', $set_from );
+
+	$sent = wp_mail( $to, $subject, $body, $headers );
+
+	remove_filter( 'wp_mail_from', $set_from );
+
+	if ( $sent ) {
+		wp_send_json_success( array( 'message' => 'Message sent.' ) );
+	} else {
+		wp_send_json_error( array( 'message' => 'Something went wrong. Please email us directly.' ), 500 );
+	}
+}
+add_action( 'wp_ajax_b2bws_contact_submit', 'b2bws_contact_submit' );
+add_action( 'wp_ajax_nopriv_b2bws_contact_submit', 'b2bws_contact_submit' );
 
 /**
  * Show every post on the blog listing in one go, so the client-side
