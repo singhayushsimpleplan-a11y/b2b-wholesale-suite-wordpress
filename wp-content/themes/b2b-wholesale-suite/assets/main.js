@@ -6,6 +6,17 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ---------- Page fade-in ---------- */
   requestAnimationFrame(() => document.body.classList.add('ready'));
 
+  /* ---------- Theme toggle (dark / light) ---------- */
+  const themeToggle = document.getElementById('theme-toggle');
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      const html = document.documentElement;
+      const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      try { localStorage.setItem('b2bws-theme', next); } catch (e) {}
+    });
+  }
+
   /* ---------- Smooth scroll (Lenis) ---------- */
   let lenis = null;
   if (!reduceMotion && typeof Lenis !== 'undefined') {
