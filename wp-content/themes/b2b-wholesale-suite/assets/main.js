@@ -97,18 +97,21 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ---------- Counters ---------- */
   document.querySelectorAll('[data-count]').forEach((el) => {
     const target = parseFloat(el.getAttribute('data-count'));
+    const prefix = el.getAttribute('data-prefix') || '';
     const suffix = el.getAttribute('data-suffix') || '';
+    const decimals = parseInt(el.getAttribute('data-decimals') || '0', 10);
+    const format = (v) => prefix + v.toFixed(decimals) + suffix;
     const run = () => {
       const obj = { val: 0 };
       gsap.to(obj, {
         val: target, duration: 1.4, ease: 'power2.out',
-        onUpdate: () => { el.textContent = Math.round(obj.val) + suffix; }
+        onUpdate: () => { el.textContent = format(obj.val); }
       });
     };
     if (hasGSAP && typeof ScrollTrigger !== 'undefined') {
       ScrollTrigger.create({ trigger: el, start: 'top 90%', once: true, onEnter: run });
     } else {
-      el.textContent = target + suffix;
+      el.textContent = format(target);
     }
   });
 

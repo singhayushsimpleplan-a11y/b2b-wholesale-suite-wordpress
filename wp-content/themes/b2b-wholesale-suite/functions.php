@@ -18,15 +18,24 @@ function b2bws_setup() {
 }
 add_action( 'after_setup_theme', 'b2bws_setup' );
 
+/**
+ * File-modification-time version for a theme asset, so edits to CSS/JS
+ * bust visitors' browser caches immediately instead of waiting on a
+ * manually-bumped theme version number.
+ */
+function b2bws_asset_ver( $relative_path ) {
+	$file = get_template_directory() . $relative_path;
+	return file_exists( $file ) ? filemtime( $file ) : wp_get_theme()->get( 'Version' );
+}
+
 function b2bws_assets() {
 	$theme_uri = get_template_directory_uri();
-	$ver       = wp_get_theme()->get( 'Version' );
 
 	// Fonts
-	wp_enqueue_style( 'b2bws-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700;800&family=Bricolage+Grotesque:opsz,wght@12..96,500..800&display=swap', array(), null );
+	wp_enqueue_style( 'b2bws-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700;800&family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Space+Grotesk:wght@500;700&display=swap', array(), null );
 
 	// Design system
-	wp_enqueue_style( 'b2bws-site', $theme_uri . '/assets/site.css', array(), $ver );
+	wp_enqueue_style( 'b2bws-site', $theme_uri . '/assets/site.css', array(), b2bws_asset_ver( '/assets/site.css' ) );
 
 	// Motion libraries (CDN)
 	wp_enqueue_script( 'threejs', 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js', array(), '128', true );
@@ -35,12 +44,12 @@ function b2bws_assets() {
 	wp_enqueue_script( 'lenis', 'https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js', array(), '1.1.13', true );
 
 	// Theme scripts
-	wp_enqueue_script( 'b2bws-hero-bg', $theme_uri . '/assets/hero-bg.js', array( 'threejs' ), $ver, true );
-	wp_enqueue_script( 'b2bws-main', $theme_uri . '/assets/main.js', array( 'gsap', 'gsap-scrolltrigger', 'lenis', 'b2bws-hero-bg' ), $ver, true );
+	wp_enqueue_script( 'b2bws-hero-bg', $theme_uri . '/assets/hero-bg.js', array( 'threejs' ), b2bws_asset_ver( '/assets/hero-bg.js' ), true );
+	wp_enqueue_script( 'b2bws-main', $theme_uri . '/assets/main.js', array( 'gsap', 'gsap-scrolltrigger', 'lenis', 'b2bws-hero-bg' ), b2bws_asset_ver( '/assets/main.js' ), true );
 
 	// Blog filter/sort — only needed on the blog listing page.
 	if ( is_home() ) {
-		wp_enqueue_script( 'b2bws-blog', $theme_uri . '/assets/blog.js', array(), $ver, true );
+		wp_enqueue_script( 'b2bws-blog', $theme_uri . '/assets/blog.js', array(), b2bws_asset_ver( '/assets/blog.js' ), true );
 	}
 }
 add_action( 'wp_enqueue_scripts', 'b2bws_assets' );
