@@ -23,8 +23,9 @@
       <div class="footer-col">
         <h4>Company</h4>
         <ul>
-          <li><a href="#">About</a></li>
           <li><a href="<?php echo esc_url( home_url( '/contact/' ) ); ?>">Contact</a></li>
+          <li><a href="<?php echo esc_url( home_url( '/privacy/' ) ); ?>">Privacy Policy</a></li>
+          <li><a href="<?php echo esc_url( home_url( '/terms/' ) ); ?>">Terms of Service</a></li>
         </ul>
       </div>
     </div>
