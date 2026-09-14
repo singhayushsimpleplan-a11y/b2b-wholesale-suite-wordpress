@@ -19,7 +19,8 @@
     var uniforms = {
       uTime: { value: 0 },
       uResolution: { value: new THREE.Vector2(1, 1) },
-      uMouse: { value: new THREE.Vector2(0.5, 0.5) }
+      uMouse: { value: new THREE.Vector2(0.5, 0.5) },
+      uDark: { value: document.documentElement.getAttribute('data-theme') === 'dark' ? 1 : 0 }
     };
 
     var vertexShader = [
@@ -35,6 +36,7 @@
       'uniform float uTime;',
       'uniform vec2 uResolution;',
       'uniform vec2 uMouse;',
+      'uniform float uDark;',
       'varying vec2 vUv;',
       '',
       'float wave(vec2 p, float t) {',
@@ -60,15 +62,25 @@
       '  float d = length(uv);',
       '  float vignette = smoothstep(1.2, 0.0, d);',
       '',
-      '  vec3 white = vec3(0.995, 0.99, 1.0);',
-      '  vec3 purple = vec3(0.75, 0.64, 0.98);',
-      '  vec3 red = vec3(1.0, 0.68, 0.63);',
-      '  vec3 redBright = vec3(1.0, 0.48, 0.4);',
+      '  vec3 baseLight = vec3(0.995, 0.99, 1.0);',
+      '  vec3 baseDark = vec3(0.039, 0.039, 0.059);',
+      '  vec3 base = mix(baseLight, baseDark, uDark);',
       '',
-      '  vec3 tint = mix(white, purple, smoothstep(0.15, 0.55, n));',
+      '  vec3 purpleLight = vec3(0.75, 0.64, 0.98);',
+      '  vec3 redLight = vec3(1.0, 0.68, 0.63);',
+      '  vec3 redBrightLight = vec3(1.0, 0.48, 0.4);',
+      '  vec3 purpleDark = vec3(0.42, 0.28, 0.82);',
+      '  vec3 redDark = vec3(0.58, 0.14, 0.16);',
+      '  vec3 redBrightDark = vec3(0.85, 0.24, 0.2);',
+      '',
+      '  vec3 purple = mix(purpleLight, purpleDark, uDark);',
+      '  vec3 red = mix(redLight, redDark, uDark);',
+      '  vec3 redBright = mix(redBrightLight, redBrightDark, uDark);',
+      '',
+      '  vec3 tint = mix(base, purple, smoothstep(0.15, 0.55, n));',
       '  tint = mix(tint, red, smoothstep(0.55, 0.85, n));',
       '  tint = mix(tint, redBright, smoothstep(0.85, 1.0, n) * 0.5);',
-      '  vec3 col = mix(white, tint, vignette * 0.75);',
+      '  vec3 col = mix(base, tint, vignette * 0.75);',
       '',
       '  float grain = fract(sin(dot(vUv * uResolution.xy, vec2(12.9898,78.233))) * 43758.5453);',
       '  col += (grain - 0.5) * 0.012;',
@@ -124,6 +136,7 @@
       requestAnimationFrame(tick);
       if (!inView || !tabVisible) return;
       uniforms.uTime.value = clock.getElapsedTime();
+      uniforms.uDark.value = document.documentElement.getAttribute('data-theme') === 'dark' ? 1 : 0;
       mouseCurrent.x += (mouseTarget.x - mouseCurrent.x) * 0.04;
       mouseCurrent.y += (mouseTarget.y - mouseCurrent.y) * 0.04;
       uniforms.uMouse.value.set(mouseCurrent.x, mouseCurrent.y);
